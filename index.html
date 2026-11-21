@@ -98,7 +98,7 @@ button:focus-visible,input:focus-visible{outline:4px solid var(--vio);outline-of
   <label>Barrido con pulsador (Espacio/Intro) <input type="checkbox" id="sca" style="width:28px;height:28px"></label>
   <label>Nombres de archivo para img/ <button class="btn s" id="cn">📋 Copiar</button></label>
   <label>Voz IA (castellano) <select id="ai" style="font:inherit;padding:6px;max-width:48%"><option value="auto">Solo si el dispositivo no tiene voz</option><option value="siempre">Siempre</option><option value="nunca">Nunca</option></select></label>
-  <div class="row" style="margin:0"><button class="btn s" id="aid">⬇ Descargar voz IA (≈60 MB)</button></div><p class="sub" id="aist" style="margin:4px 0;text-align:center"></p>
+  <div class="row" style="margin:0"><button class="btn s" id="aid">⬇ Descargar voz IA (≈60 MB)</button><button class="btn g" id="aip">💾 Generar audios (recomendado)</button><button class="btn p" id="acl">🗑 Borrar audios guardados</button></div><p class="sub" id="aist" style="margin:4px 0;text-align:center"></p>
   <label>Pantalla completa <button class="btn s" id="fs">Activar</button></label>
   <p class="sub">Consejo AL: usa 2 opciones, voz lenta (3-5) y repite el modelo articulatorio frente al espejo. Si tu navegador no tiene voz en español, instálala en los ajustes del sistema.</p>
   <div class="row"><button class="btn g" id="ok">Cerrar</button></div>
@@ -106,7 +106,11 @@ button:focus-visible,input:focus-visible{outline:4px solid var(--vio);outline-of
 
 <script>
 const $=s=>document.querySelector(s),app=$('#app');
-const W=[['🐶','perro','pe-rro'],['🐱','gato','ga-to'],['🍎','manzana','man-za-na'],['🌞','sol','sol'],['🏠','casa','ca-sa'],['🐟','pez','pez'],['🎈','globo','glo-bo'],['🍌','plátano','plá-ta-no'],['🚗','coche','co-che'],['🌳','árbol','ár-bol'],['👁️','ojo','o-jo'],['🥛','leche','le-che'],['🐸','rana','ra-na'],['🍞','pan','pan'],['🌙','luna','lu-na'],['⚽','pelota','pe-lo-ta'],['🐭','ratón','ra-tón'],['🦆','pato','pa-to'],['🌹','rosa','ro-sa'],['🍇','uvas','u-vas'],['🦋','mariposa','ma-ri-po-sa'],['✈️','avión','a-vión'],['🐘','elefante','e-le-fan-te'],['🏝️','isla','is-la'],['🐻','oso','o-so'],['🦒','jirafa','ji-ra-fa'],['🐴','caballo','ca-ba-llo'],['🍓','fresa','fre-sa'],['🐢','tortuga','tor-tu-ga'],['🍅','tomate','to-ma-te'],['👆','dedo','de-do'],['🦷','diente','dien-te'],['👂','oreja','o-re-ja'],['👃','nariz','na-riz'],['🚌','autobús','au-to-bús'],['🧸','osito','o-si-to'],['🐌','caracol','ca-ra-col'],['🛏️','cuna','cu-na'],['🔘','botón','bo-tón'],['🚚','camión','ca-mión'],['🐛','oruga','o-ru-ga'],['👢','bota','bo-ta'],['🐺','lobo','lo-bo'],['🐓','gallo','ga-llo'],['🪑','mesa','me-sa'],['🍮','flan','flan']].map(([e,w,s])=>({e,w,s:s.split('-')}));
+const W=[['🐶','perro','pe-rro'],['🐱','gato','ga-to'],['🍎','manzana','man-za-na'],['🌞','sol','sol'],['🏠','casa','ca-sa'],['🐟','pez','pez'],['🎈','globo','glo-bo'],['🍌','plátano','plá-ta-no'],['🚗','coche','co-che'],['🌳','árbol','ár-bol'],['👁️','ojo','o-jo'],['🥛','leche','le-che'],['🐸','rana','ra-na'],['🍞','pan','pan'],['🌙','luna','lu-na'],['⚽','pelota','pe-lo-ta'],['🐭','ratón','ra-tón'],['🦆','pato','pa-to'],['🌹','rosa','ro-sa'],['🍇','uvas','u-vas'],['🦋','mariposa','ma-ri-po-sa'],['✈️','avión','a-vión'],['🐘','elefante','e-le-fan-te'],['🏝️','isla','is-la'],['🐻','oso','o-so'],['🦒','jirafa','ji-ra-fa'],['🐴','caballo','ca-ba-llo'],['🍓','fresa','fre-sa'],['🐢','tortuga','tor-tu-ga'],['🍅','tomate','to-ma-te'],['👆','dedo','de-do'],['🦷','diente','dien-te'],['👂','oreja','o-re-ja'],['👃','nariz','na-riz'],['🚌','autobús','au-to-bús'],['🧸','osito','o-si-to'],['🐌','caracol','ca-ra-col'],['🛏️','cuna','cu-na'],['🔘','botón','bo-tón'],['🚚','camión','ca-mión'],['🐛','oruga','o-ru-ga'],['👢','bota','bo-ta'],['🐺','lobo','lo-bo'],['🐓','gallo','ga-llo'],['🪑','mesa','me-sa'],['🍮','flan','flan']].concat([['🐄','vaca','va-ca','f'],['🐷','cerdo','cer-do'],['🐑','oveja','o-ve-ja','f'],['🐔','gallina','ga-lli-na','f'],['🦁','león','le-ón'],['🐒','mono','mo-no'],['🐍','serpiente','ser-pien-te','f'],['🦈','tiburón','ti-bu-rón'],['🐬','delfín','del-fín'],['🐝','abeja','a-be-ja','f'],['🕷️','araña','a-ra-ña','f'],['🐜','hormiga','hor-mi-ga','f'],['🦀','cangrejo','can-gre-jo'],['🐙','pulpo','pul-po'],['🐧','pingüino','pin-güi-no'],['🦉','búho','bú-ho'],['🐇','conejo','co-ne-jo'],['🐼','panda','pan-da'],['🐂','toro','to-ro'],['🦭','foca','fo-ca','f'],['🐀','rata','ra-ta','f'],['🍐','pera','pe-ra','f'],['🍊','naranja','na-ran-ja','f'],['🍋','limón','li-món'],['🍉','sandía','san-dí-a','f'],['🍒','cerezas','ce-re-zas','fp'],['🥕','zanahoria','za-na-ho-ria','f'],['🥚','huevo','hue-vo'],['🧀','queso','que-so'],['🍪','galleta','ga-lle-ta','f'],['🍫','chocolate','cho-co-la-te'],['🍦','helado','he-la-do'],['🍕','pizza','piz-za','f'],['🍲','sopa','so-pa','f'],['🪑','silla','si-lla','f'],['🛏️','cama','ca-ma','f'],['🚪','puerta','puer-ta','f'],['🔑','llave','lla-ve','f'],['⏰','reloj','re-loj'],['📚','libro','li-bro'],['✏️','lápiz','lá-piz'],['✂️','tijeras','ti-je-ras','fp'],['🎒','mochila','mo-chi-la','f'],['👟','zapato','za-pa-to'],['👕','camiseta','ca-mi-se-ta','f'],['🧢','gorra','go-rra','f'],['🧦','calcetín','cal-ce-tín'],['☂️','paraguas','pa-ra-guas'],['🥄','cuchara','cu-cha-ra','f'],['🍴','tenedor','te-ne-dor'],['🥤','vaso','va-so'],['🪁','cometa','co-me-ta','f'],['🥁','tambor','tam-bor'],['🎸','guitarra','gui-ta-rra','f'],['🔔','campana','cam-pa-na','f'],['🔥','fuego','fue-go'],['⭐','estrella','es-tre-lla','f'],['☁️','nube','nu-be','f'],['🌧️','lluvia','llu-via','f'],['🌈','arcoíris','ar-co-í-ris'],['🌻','girasol','gi-ra-sol'],['🌊','ola','o-la','f'],['🚲','bici','bi-ci','f'],['🚂','tren','tren'],['🚢','barco','bar-co'],['👑','corona','co-ro-na','f'],['🎁','regalo','re-ga-lo'],['🎂','tarta','tar-ta','f'],['🖐️','mano','ma-no','f'],['🦶','pie','pie'],['👄','boca','bo-ca','f'],['👅','lengua','len-gua','f'],['❤️','corazón','co-ra-zón'],['🧒','niño','ni-ño'],['👧','niña','ni-ña','f'],['👩','mamá','ma-má','f'],['👨','papá','pa-pá']]).map(([e,w,s,g])=>({e,w,g,s:s.split('-')}));
+const FEM=new Set('manzana casa luna pelota rana rosa mariposa isla jirafa tortuga oreja nariz fresa mesa oruga bota cuna leche'.split(' '));
+W.forEach(w=>{w.g=w.g||(w.w=='uvas'?'fp':FEM.has(w.w)?'f':'m')});
+const art=w=>({m:'el',f:'la',mp:'los',fp:'las'})[w.g||'m'],es=w=>w.g&&w.g.endsWith('p')?'están':'está';
+const LN={a:'a',b:'be',c:'ce',d:'de',e:'e',f:'efe',g:'ge',h:'hache',i:'i',j:'jota',k:'ka',l:'ele',m:'eme',n:'ene',ñ:'eñe',o:'o',p:'pe',q:'cu',r:'erre',s:'ese',t:'te',u:'u',v:'uve',w:'uve doble',x:'equis',y:'ye',z:'zeta'};
 let S={rate:6,n:3,up:false,snd:true,stars:0,help:1,pdi:false,hc:false,scan:false,voice:'',ai:'auto',aiOk:false,img:false,st:[],cur:'',lg:{},nt:{}},tm=null,AU={},curA=null,Q=[];
 try{Object.assign(S,JSON.parse(localStorage.getItem('palabrita')||'{}'))}catch(e){}
 const save=()=>{try{localStorage.setItem('palabrita',JSON.stringify(S))}catch(e){}};
@@ -118,7 +122,7 @@ function bestVoice(){const v=speechSynthesis.getVoices().filter(x=>/^es/i.test(x
 function toast(t,f){const e=$('#ts');clearTimeout(toast.h);if(S.snd&&!f){e.style.display='none';return}e.textContent=t;e.style.display='block';toast.h=setTimeout(()=>e.style.display='none',7000)}
 $('#ts').onclick=e=>{clearTimeout(toast.h);e.currentTarget.style.display='none'};
 function say(t,r){aiT++;toast(t);if(!S.snd)return;try{speechSynthesis.cancel()}catch(e){}if(curA)curA.pause();const k=bare(t.toLowerCase());if(AU[k]){curA=new Audio(AU[k]);curA.play().catch(()=>{});return}if(S.ai!='nunca'&&S.aiOk&&(S.ai=='siempre'||!hasVoice())){aiSay(t,r).catch(()=>devTTS(t,r));return}devTTS(t,r)}
-function devTTS(t,r){if(!window.speechSynthesis){toast(t,1);return}const u=new SpeechSynthesisUtterance(t),v=bestVoice();if(v){u.voice=v;u.lang=v.lang}else u.lang='es-ES';u.rate=r||S.rate/10;speechSynthesis.speak(u)}
+function devTTS(t,r){if(!window.speechSynthesis){toast(t,1);return}const vs=speechSynthesis.getVoices(),v=bestVoice();if(vs.length&&!v){toast(t,1);return}const u=new SpeechSynthesisUtterance(t);if(v){u.voice=v;u.lang=v.lang}else u.lang='es-ES';u.rate=r||S.rate/10;speechSynthesis.speak(u)}
 function stars(n=1){S.stars+=n;$('#st').textContent='⭐ '+S.stars;save()}
 function burst(el){const r=el.getBoundingClientRect();for(let i=0;i<8;i++){const p=document.createElement('div');p.className='pop';p.textContent=rnd(['⭐','🎉','✨','💛','🌈']);p.style.left=r.left+r.width/2+'px';p.style.top=r.top+'px';p.style.setProperty('--x',(Math.random()*240-120)+'px');document.body.append(p);setTimeout(()=>p.remove(),1250)}}
 function go(title,fn){if(fn===menu)Q=[];$('#nx').style.display='none';clearInterval(tm);clearTimeout(toast.h);$('#ts').style.display='none';try{speechSynthesis.cancel()}catch(e){}$('#ttl').textContent=title;$('#home').style.display=fn===menu?'none':'';$('#fh').style.display=fn===menu?'none':'block';app.innerHTML='';fn()}
@@ -169,7 +173,7 @@ function letras(){
   app.innerHTML='<div class="panel" id="lc"><div class="word">Toca una letra</div></div><div class="row" id="lv"></div><div class="row" id="la"></div>';
   const show=l=>{const ex=W.filter(w=>bare(w.w)[0]==l);const w=ex.length?rnd(ex):null;
     $('#lc').innerHTML=`<div class="pic" style="font-weight:700">${l.toUpperCase()} ${l}</div>${w?`<div class="pic" style="font-size:5rem">${P(w)}</div><div class="word">${syls(w)}</div>`:'<p class="sub">Piensa en una palabra con esta letra</p>'}`;
-    say(w?`${l}, de ${w.w}`:l,.6)};
+    say(w?`${LN[l]}, de ${w.w}`:LN[l],.6)};
   const mk=(id,arr,st)=>{$(id).innerHTML=arr.map(l=>`<button class="opt t" style="${st}" data-l="${l}">${T(l)}</button>`).join('');$(id).querySelectorAll('.opt').forEach(b=>b.onclick=()=>show(b.dataset.l))};
   mk('#lv',V,'background:#ffd36b;color:#26324b');mk('#la',A,'min-height:80px;min-width:80px;font-size:2.2rem');
 }
@@ -179,9 +183,9 @@ function quiz(mode){
   const pool=W;let cur;
   const mkOpts=(corr,wrong,txt)=>shuf([{h:corr,ok:1},...wrong.map(h=>({h,ok:0}))]).map(o=>({...o,t:txt}));
   const make={
-    listen(){const w=rnd(pool),o=shuf(pool.filter(x=>x!==w)).slice(0,S.n-1);return{say:`¿Dónde está ${w.w}?`,pic:'🔊',opts:mkOpts(P(w),o.map(P))}},
+    listen(){const w=rnd(pool),o=shuf(pool.filter(x=>x!==w)).slice(0,S.n-1);return{say:`¿Dónde ${es(w)} ${art(w)} ${w.w}?`,pic:'🔊',opts:mkOpts(P(w),o.map(P))}},
     sound(){const w=rnd(pool),l=bare(w.w)[0],ls=shuf([...new Set(pool.map(x=>bare(x.w)[0]))].filter(x=>x!=l)).slice(0,S.n-1);return{say:`¿Con qué sonido empieza ${w.w}?`,pic:P(w),opts:mkOpts(T(l),ls.map(T),1),sayAfter:w.w}},
-    rhyme(){const RH=[['gato','pato'],['rana','manzana'],['rosa','mariposa'],['sol','caracol'],['luna','cuna'],['ratón','botón'],['avión','camión'],['tortuga','oruga'],['pelota','bota'],['globo','lobo'],['caballo','gallo'],['fresa','mesa'],['pan','flan']];const g=rnd(RH).map(x=>pool.find(w=>w.w==x)),[c,r]=shuf(g),o=shuf(pool.filter(b=>!g.includes(b))).slice(0,S.n-1);return{say:`¿Qué rima con ${c.w}?`,pic:P(c),opts:mkOpts(P(r),o.map(P)),sayAfter:c.w}},
+    rhyme(){const RH=[['gato','pato','zapato'],['rana','manzana','campana'],['rosa','mariposa'],['sol','caracol','girasol'],['luna','cuna'],['ratón','botón','limón','corazón','tiburón','león'],['avión','camión'],['tortuga','oruga'],['pelota','bota'],['globo','lobo'],['caballo','gallo'],['fresa','mesa'],['pan','flan'],['abeja','oveja','oreja'],['galleta','cometa','camiseta'],['tambor','tenedor']];const g=rnd(RH).map(x=>pool.find(w=>w.w==x)),[c,r]=shuf(g),o=shuf(pool.filter(b=>!g.includes(b))).slice(0,S.n-1);return{say:`¿Qué rima con ${art(c)} ${c.w}?`,pic:P(c),opts:mkOpts(P(r),o.map(P)),sayAfter:c.w}},
     pm(){const[a,b]=shuf(rnd(PM)),t=Math.random()<.5?a:b,o=t==a?b:a;return{say:t.w,pic:'🔊',opts:mkOpts(P(t),[P(o)])}},
     intr(){const l=rnd(['p','m','c','l','r','g','b']),sm=shuf(pool.filter(w=>bare(w.w)[0]==l));if(sm.length<2)return make.intr();const o=rnd(pool.filter(w=>bare(w.w)[0]!=l));return{say:`${sm[0].w}, ${sm[1].w}, ${o.w}. ¿Cuál empieza distinto?`,pic:'🔊',opts:mkOpts(P(o),[P(sm[0]),P(sm[1])])}},
     emo(){const e=rnd(EM),o=shuf(EM.filter(x=>x!=e)).slice(0,S.n-1);return{say:'¿Cómo se siente?',pic:e[0],opts:mkOpts(T(e[1]),o.map(x=>T(x[1])),1)}},
@@ -311,34 +315,52 @@ let aiT=0,PT=null;const AIC={},VID='es_ES-davefx-medium';
 const hasVoice=()=>{try{return speechSynthesis.getVoices().some(v=>/^es/i.test(v.lang))}catch(e){return false}};
 async function piper(){if(!PT)PT=await import('https://cdn.jsdelivr.net/npm/@mintplex-labs/piper-tts-web@1.0.4/+esm');return PT}
 async function aiDownload(){const st=$('#aist');try{st.textContent='Cargando…';const t=await piper();await t.download(VID,p=>{st.textContent=p&&p.total?'Descargando '+Math.round(p.loaded*100/p.total)+'%':'Descargando…'});S.aiOk=true;save();st.textContent='✅ Lista'}catch(e){st.textContent='❌ No se pudo descargar (se necesita internet esta vez)'}}
-async function aiSay(t,r){const my=aiT,tt=await piper();let u=AIC[t];if(!u){u=AIC[t]=URL.createObjectURL(await tt.predict({text:t,voiceId:VID}))}
-  if(my!=aiT)return;if(curA)curA.pause();curA=new Audio(u);curA.playbackRate=Math.max(.6,Math.min(1.1,(r||S.rate/10)*1.25));await curA.play()}
+const AE=new Audio();let unl=false;
+document.addEventListener('pointerdown',()=>{if(unl)return;unl=true;AE.src='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';AE.play().catch(()=>{})},{once:true});
+async function aiSay(t,r){const my=aiT,tt=await piper();let u=AIC[t];if(!u){const w=await tt.predict({text:t+'.',voiceId:VID});if(w.size<4000)throw 0;u=AIC[t]=URL.createObjectURL(w)}
+  if(my!=aiT)return;if(curA)curA.pause();curA=AE;AE.src=u;AE.playbackRate=Math.max(.6,Math.min(1.1,(r||S.rate/10)*1.25));await AE.play()}
+async function aiPre(){const st=$('#aist');if(!S.aiOk){st.textContent='Primero descarga la voz IA';return}
+  try{const tt=await piper(),ks=[...new Set([...W.flatMap(w=>[w.w,...w.s]),...PM.flat().map(w=>w.w),...EM.map(e=>e[1]),...Object.values(LN)])].filter(k=>!AU[bare(k.toLowerCase())]);let n=0;
+    for(const k of ks){const key=bare(k.toLowerCase());try{const w=await tt.predict({text:k+'.',voiceId:VID});if(w.size>4000){await recSet(key,w);AU[key]=URL.createObjectURL(w)}}catch(e){}st.textContent='Generando '+(++n)+'/'+ks.length+'… no cierres la página'}
+    st.textContent='✅ Audios guardados ('+n+'). Revisa y regraba los que no te gusten en «Mi voz»'}catch(e){st.textContent='❌ Error al generar'}}
+async function recClear(){const d=await idb();d.transaction('rec','readwrite').objectStore('rec').clear();for(const k in AU)delete AU[k];$('#aist').textContent='Audios borrados'}
 
 /* Nuevas actividades */
-const PM=[['🦆','pato','🐱','gato'],['🐀','rata','🥫','lata'],['🧂','sal','🌞','sol'],['🪑','mesa','⛪','misa'],['🐂','toro','🥇','oro'],['🍲','sopa','👕','ropa'],['✋','mano','🐒','mono'],['🦭','foca','👄','boca'],['🌙','luna','🛏️','cuna']].map(([a,b,c,d])=>[{e:a,w:b},{e:c,w:d}]);
+const PM=[['🦆','pato','🐱','gato'],['🐀','rata','🥫','lata'],['🧂','sal','🌞','sol'],['🪑','mesa','⛪','misa'],['🐂','toro','🥇','oro'],['🍲','sopa','👕','ropa'],['✋','mano','🐒','mono'],['🦭','foca','👄','boca'],['🌙','luna','🛏️','cuna'],['🧀','queso','😘','beso'],['🛏️','cama','🌿','rama'],['👁️','ojo','🔴','rojo'],['🔥','fuego','🎲','juego']].map(([a,b,c,d])=>[{e:a,w:b},{e:c,w:d}]);
 const EM=[['😊','contento'],['😢','triste'],['😠','enfadado'],['😨','asustado'],['😴','cansado'],['😲','sorprendido']];
-const FR=[['🐶🍞','el perro come pan'],['🐱🥛','el gato bebe leche'],['👦🍎','el niño come una manzana'],['🐸💧','la rana salta'],['🐟🌊','el pez nada'],['🚗🏠','el coche va a casa'],['👧⚽','la niña juega a la pelota']];
+const FRold0=[['🐶🍞','el perro come pan'],['🐱🥛','el gato bebe leche'],['👦🍎','el niño come una manzana'],['🐸💧','la rana salta'],['🐟🌊','el pez nada'],['🚗🏠','el coche va a casa'],['👧⚽','la niña juega a la pelota']];
 const SQ=[['🌱','🌿','🌻'],['🥚','🐣','🐔'],['🌅','☀️','🌙'],['🐛','🫘','🦋'],['🍇','🍷','🥂']].slice(0,4);
-function ordena(L,kind){const it=rnd(L),C=kind=='frase'?it[1].split(' '):it,got=[],tl=shuf(C.map((t,i)=>({t,i})));
-  app.innerHTML=`<div class="panel"><div class="pic">${kind=='frase'?it[0]:'🤔'}</div><div id="sl">${C.map(()=>'<span class="slot" style="font-size:2.4rem"></span>').join('')}</div></div><div class="row" id="op"></div>`;
-  if(kind=='frase')say(it[1],.6);
-  $('#op').innerHTML=tl.map((t,i)=>`<button class="opt ${kind=='frase'?'t':''}" data-i="${i}">${kind=='frase'?T(t.t):t.t}</button>`).join('');
+const FR=[[['🐶','🍽️','🍞'],'el perro come pan'],[['👦','🍽️','🍎'],'el niño come una manzana'],[['🐸','⤴️','💧'],'la rana salta al agua'],[['🐟','🏊','🌊'],'el pez nada en el mar'],[['🚗','➡️','🏠'],'el coche va a casa'],[['👧','🏃','⚽'],'la niña corre a la pelota'],[['👨','🚲','🏞️'],'papá va en bici al parque'],[['🐶','🏃','🦴'],'el perro corre al hueso'],[['👩','🍳','🥚'],'mamá cocina un huevo'],[['🐱','😴','🛏️'],'el gato duerme en la cama']];
+function ordena(L,kind){const it=rnd(L),C=kind=='frase'?it[0]:it,got=[],tl=shuf(C.map((t,i)=>({t,i})));
+  app.innerHTML=`<div class="panel"><div class="pic">${kind=='frase'?'🔊':'🤔'}</div><div id="sl">${C.map(()=>'<span class="slot" style="font-size:2.6rem"></span>').join('')}</div>${kind=='frase'?'<div class="row"><button class="btn" id="rp">🔊 Escuchar</button></div>':''}</div><div class="row" id="op"></div>`;
+  if(kind=='frase'){const r=()=>say(it[1],.6);$('#rp').onclick=r;setTimeout(r,300)}
+  $('#op').innerHTML=tl.map((t,i)=>`<button class="opt" data-i="${i}">${t.t}</button>`).join('');
   $('#op').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const t=tl[b.dataset.i];
-    if(t.t==C[got.length]){const sl=$('#sl').children[got.length];sl.textContent=kind=='frase'?T(t.t):t.t;sl.classList.add('f');got.push(t);b.style.visibility='hidden';if(kind=='frase')say(t.t,.6);
-      if(got.length==C.length){burst(sl);stars(2);logr(kind,1);say(kind=='frase'?it[1]+'. ¡Muy bien!':'Primero, después y al final. ¡Muy bien!');setTimeout(()=>ordena(L,kind),3000)}}
+    if(t.t==C[got.length]){const sl=$('#sl').children[got.length];sl.textContent=t.t;sl.classList.add('f');got.push(t);b.style.visibility='hidden';
+      if(got.length==C.length){burst(sl);stars(2);logr(kind,1);if(kind=='frase')$('#sl').insertAdjacentHTML('afterend','<div class="word" style="font-size:1.6rem">'+T(it[1])+'</div>');say(kind=='frase'?it[1]+'. ¡Muy bien!':'Primero, después y al final. ¡Muy bien!');setTimeout(()=>ordena(L,kind),3500)}}
     else{logr(kind,0);b.classList.add('shake');setTimeout(()=>b.classList.remove('shake'),400)}});
 }
-function trazo(){let l='a';
-  app.innerHTML='<div class="panel"><canvas id="cv" width="420" height="420" style="width:min(100%,420px);touch-action:none;background:var(--card);border-radius:20px;border:4px dashed var(--vio)"></canvas><div class="row"><button class="btn p" id="cb">🧽 Borrar</button><button class="btn g" id="cd">✔ Hecho</button></div></div><div class="row" id="lt"></div>';
-  const c=$('#cv'),x=c.getContext('2d');let dr=false;
-  const gd=()=>{x.clearRect(0,0,420,420);x.fillStyle='#c9d2e6';x.font='bold 330px Fredoka,"Comic Sans MS",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(T(l),210,225);x.lineWidth=20;x.lineCap=x.lineJoin='round';x.strokeStyle='#ff6f91'};
+/* Trazo: [camino SVG, x inicio, y inicio, x hacia dónde, y hacia dónde] en una caja 0-100 */
+const O='M72 32 C55 15 25 22 25 50 C25 78 55 85 72 68 C80 58 80 42 72 32';
+const LS={o:[[O,72,32,55,18]],a:[[O,72,32,55,18],['M75 32 L75 82',75,32,75,82]],e:[['M28 52 L78 52 C78 30 60 22 48 22 C28 22 24 42 24 55 C24 78 45 86 72 76',28,52,78,52]],i:[['M50 35 L50 80',50,35,50,80],['M50 18 L50 20',50,18,50,20]],u:[['M28 30 L28 62 C28 82 58 84 72 62',28,30,28,62],['M72 30 L72 82',72,30,72,82]],m:[['M25 35 L25 80',25,35,25,80],['M25 50 C25 30 50 30 50 50 L50 80',25,50,25,38],['M50 50 C50 30 75 30 75 50 L75 80',50,50,50,38]],n:[['M30 35 L30 80',30,35,30,80],['M30 50 C30 30 70 30 70 50 L70 80',30,50,30,38]],l:[['M50 15 L50 80',50,15,50,80]],t:[['M50 15 L50 80',50,15,50,80],['M30 38 L70 38',30,38,70,38]],p:[['M30 35 L30 95',30,35,30,95],['M30 50 C30 30 72 30 72 55 C72 80 30 78 30 60',30,50,30,38]],s:[['M70 35 C50 22 28 35 45 50 C62 62 75 75 50 82 C38 85 28 78 28 72',70,35,50,24]],c:[['M72 38 C55 20 25 28 25 52 C25 78 55 85 72 66',72,38,55,24]],r:[['M32 35 L32 80',32,35,32,80],['M32 52 C35 35 60 32 70 40',32,52,34,42]],d:[[O,72,32,55,18],['M75 12 L75 82',75,12,75,82]],b:[['M30 12 L30 82',30,12,30,82],['M30 55 C35 30 75 30 75 58 C75 85 35 85 30 62',30,55,35,40]],f:[['M62 22 C50 8 38 15 40 30 L40 82',62,22,50,12],['M25 42 L62 42',25,42,62,42]],h:[['M30 12 L30 82',30,12,30,82],['M30 52 C32 32 72 32 72 55 L72 82',30,52,32,40]],g:[[O,72,32,55,18],['M75 32 L75 80 C75 98 45 100 30 90',75,32,75,80]]};
+function trazo(){let l='a',nx=0,dr=false;
+  app.innerHTML='<div class="panel"><div style="position:relative;width:min(100%,420px);margin:auto"><canvas id="cg" width="420" height="420" style="width:100%;display:block;background:var(--card);border-radius:20px;border:4px dashed var(--vio)"></canvas><canvas id="cv" width="420" height="420" style="position:absolute;inset:0;width:100%;height:100%;touch-action:none"></canvas></div><p class="sub" id="tp"></p><div class="row"><button class="btn p" id="cb">🧽 Borrar</button><button class="btn g" id="cd">✔ Hecho</button></div></div><div class="row" id="lt"></div>';
+  const g=$('#cg').getContext('2d'),x=$('#cv').getContext('2d'),c=$('#cv');
+  const ar=(sx,sy,dx,dy,col)=>{let vx=dx-sx,vy=dy-sy;const m=Math.hypot(vx,vy)||1;vx/=m;vy/=m;const bx=sx+vx*10,by=sy+vy*10;g.strokeStyle=g.fillStyle=col;g.setLineDash([]);g.lineWidth=2.5;g.beginPath();g.moveTo(sx,sy);g.lineTo(bx,by);g.stroke();g.beginPath();g.moveTo(bx+vx*6,by+vy*6);g.lineTo(bx-vy*4,by+vx*4);g.lineTo(bx+vy*4,by-vx*4);g.fill()};
+  const gd=()=>{g.clearRect(0,0,420,420);g.lineCap='round';g.lineJoin='round';const st=LS[l];
+    if(!st){g.setLineDash([1,13]);g.lineWidth=7;g.strokeStyle='#8e9bc2';g.font='bold 330px Fredoka,"Comic Sans MS",sans-serif';g.textAlign='center';g.textBaseline='middle';g.strokeText(T(l),210,225);$('#tp').textContent='Sigue los puntitos con el dedo.';return}
+    g.save();g.scale(4.2,4.2);
+    st.forEach((a,i)=>{const cur=i==nx,done=i<nx;g.setLineDash([.1,cur?5:6]);g.lineWidth=cur?3.4:2.6;g.strokeStyle=done?'#d5dbea':cur?'#7b61ff':'#9aa7c7';g.stroke(new Path2D(a[0]));
+      if(!done){ar(a[1],a[2],a[3],a[4],cur?'#2ec4a6':'#9aa7c7');g.setLineDash([]);g.fillStyle=cur?'#2ec4a6':'#9aa7c7';g.beginPath();g.arc(a[1],a[2],4.2,0,7);g.fill();g.fillStyle='#fff';g.font='bold 6px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(i+1,a[1],a[2]+.4)}});
+    g.restore();$('#tp').textContent=nx<st.length?'Empieza en el punto verde '+(nx+1)+' y sigue la flecha.':'¡Muy bien! Pulsa ✔ Hecho.'};
+  x.lineWidth=18;x.lineCap=x.lineJoin='round';x.strokeStyle='#ff6f91';
   const pt=e=>{const r=c.getBoundingClientRect();return[(e.clientX-r.left)*420/r.width,(e.clientY-r.top)*420/r.height]};
   c.onpointerdown=e=>{dr=true;c.setPointerCapture(e.pointerId);x.beginPath();const[a,b]=pt(e);x.moveTo(a,b);x.lineTo(a+.1,b);x.stroke()};
   c.onpointermove=e=>{if(dr){const[a,b]=pt(e);x.lineTo(a,b);x.stroke()}};
-  c.onpointerup=c.onpointercancel=()=>dr=false;
-  $('#cb').onclick=gd;$('#cd').onclick=()=>{burst($('#cd'));stars();say('¡Qué bien lo has trazado!')};
+  c.onpointerup=c.onpointercancel=()=>{if(dr&&LS[l]){nx=Math.min(nx+1,LS[l].length);gd()}dr=false};
+  $('#cb').onclick=()=>{x.clearRect(0,0,420,420);nx=0;gd()};$('#cd').onclick=()=>{burst($('#cd'));stars();say('¡Qué bien lo has trazado!')};
   $('#lt').innerHTML=[...'aeioumpstlnbdgfrchjvzñ'].map(k=>`<button class="opt t" style="min-width:70px;min-height:70px;font-size:2rem" data-l="${k}">${T(k)}</button>`).join('');
-  $('#lt').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{l=b.dataset.l;gd();say(l,.6);scrollTo(0,0)});
+  $('#lt').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{l=b.dataset.l;nx=0;x.clearRect(0,0,420,420);gd();say(LN[l],.6);scrollTo(0,0)});
   gd();
 }
 function fonemas(){
@@ -376,7 +398,7 @@ document.addEventListener('keydown',e=>{if(S.scan&&(e.key==' '||e.key=='Enter'))
 const d=$('#dlg');
 $('#cfg').onclick=()=>{$('#vs').innerHTML='<option value="">Automática (la mejor en español)</option>'+(window.speechSynthesis?speechSynthesis.getVoices():[]).filter(v=>/^es/i.test(v.lang)).map(v=>`<option ${v.name==S.voice?'selected':''}>${v.name}</option>`).join('');$('#im').checked=S.img;$('#hp').value=S.help;$('#pd2').checked=S.pdi;$('#hc').checked=S.hc;$('#sca').checked=S.scan;$('#ai').value=S.ai;$('#aist').textContent=S.aiOk?'✅ Lista':'';$('#rate').value=S.rate;$('#n').value=S.n;$('#up').checked=S.up;$('#snd').checked=S.snd;d.showModal()};
 $('#ok').onclick=()=>{S.help=+$('#hp').value;S.pdi=$('#pd2').checked;S.hc=$('#hc').checked;S.scan=$('#sca').checked;S.ai=$('#ai').value;S.voice=$('#vs').value;S.img=$('#im').checked;S.rate=+$('#rate').value;S.n=+$('#n').value;S.up=$('#up').checked;S.snd=$('#snd').checked;save();applyUI();d.close()};
-$('#aid').onclick=aiDownload;
+$('#aid').onclick=aiDownload;$('#aip').onclick=aiPre;$('#acl').onclick=()=>{if(confirm('Se borrarán los audios generados Y tus grabaciones de «Mi voz». ¿Continuar?'))recClear()};
 $('#cn').onclick=()=>{const n=[...new Set([...W.map(w=>w.w),...PM.flat().map(w=>w.w)])].map(w=>bare(w)+'.png').join('\n');try{navigator.clipboard.writeText(n);alert('Lista copiada ('+n.split('\n').length+' nombres de archivo)')}catch(e){prompt('Copia esta lista:',n)}};
 $('#tv').onclick=()=>{S.voice=$('#vs').value;S.ai=$('#ai').value;say('Hola, ¿cómo estás? Esta es la voz elegida.')};
 $('#fs').onclick=()=>{try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}catch(e){}};
